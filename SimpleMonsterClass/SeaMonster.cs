@@ -15,7 +15,8 @@ namespace SimpleMonsterClass
             SAD,
             ANGRY,
             PISSED,
-            FURIOUS
+            FURIOUS,
+            WILD
         }
 
 
