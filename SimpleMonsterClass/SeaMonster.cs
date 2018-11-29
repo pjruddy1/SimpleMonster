@@ -27,7 +27,7 @@ namespace SimpleMonsterClass
         private bool _canUseFreshwater;
         private EmotionalState _currentEmotionalState;
         private string _homeSea;
-
+        private DateTime _whenFound;
 
 
         #endregion
@@ -62,6 +62,11 @@ namespace SimpleMonsterClass
             set { _homeSea = value; }
         }
 
+        public DateTime WhenFound
+        {
+            get { return _whenFound; }
+            set { _whenFound = value; }
+        }
 
         #endregion
 
