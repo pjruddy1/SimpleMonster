@@ -28,7 +28,7 @@ namespace SimpleMonsterClass
         private EmotionalState _currentEmotionalState;
         private string _homeSea;
         private DateTime _whenFound;
-
+        private bool _wasFound;
 
         #endregion
 
@@ -68,6 +68,12 @@ namespace SimpleMonsterClass
             set { _whenFound = value; }
         }
 
+        public bool WasFound
+        {
+            get { return _wasFound; }
+            set { _wasFound = value; }
+        }
+
         #endregion
 
         #region METHODS
@@ -76,6 +82,12 @@ namespace SimpleMonsterClass
         {
 
             return _name + " is " + _currentEmotionalState + ".";
+        }
+
+        public bool SeaMonsterIsFound()
+        {
+            _wasFound = true;
+            return _wasFound;
         }
 
         #endregion

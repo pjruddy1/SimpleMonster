@@ -48,6 +48,7 @@ namespace SimpleMonsterClass
                     Console.WriteLine(seaMonster.CanUseFreshwater);
                     Console.WriteLine(seaMonster.HomeSea);
                     Console.WriteLine(seaMonster.CurrentEmotionalState);
+                    Console.WriteLine(seaMonster.WhenFound);
                     Console.WriteLine();
                     Console.Write("Press Any Key to Delete Monster");
                     seaMonsters.Remove(seaMonster);
@@ -92,6 +93,7 @@ namespace SimpleMonsterClass
             sid.CurrentEmotionalState = SeaMonster.EmotionalState.SAD;
             sid.HomeSea = "Dead Sea";
             sid.WhenFound = new DateTime(1984, 11, 27, 6, 32, 0);
+            sid.SeaMonsterIsFound();
             seaMonsters.Add(sid);
 
             SeaMonster suzy = new SeaMonster();
@@ -101,13 +103,14 @@ namespace SimpleMonsterClass
             suzy.CurrentEmotionalState = SeaMonster.EmotionalState.HAPPY;
             suzy.HomeSea = "Red Sea";
             suzy.WhenFound = new DateTime(1982, 12, 04, 6, 32, 0);
+            suzy.SeaMonsterIsFound();
             seaMonsters.Add(suzy);
         }
         
         static void DisplayChangeSeaMonsterInfo(List<SeaMonster> seaMonsters)
         {
             string seaMonsterName;
-
+            bool validResponse = false;
             DisplayHeader("Display Sea monster Info");
 
             //
@@ -135,38 +138,94 @@ namespace SimpleMonsterClass
                     Console.WriteLine();
                     Console.WriteLine("Current Monster's Information");
                     Console.WriteLine(seaMonster.Name);
-                    Console.WriteLine(seaMonster.Weight);
-                    Console.WriteLine(seaMonster.CanUseFreshwater);
-                    Console.WriteLine(seaMonster.HomeSea);
-                    Console.WriteLine(seaMonster.CurrentEmotionalState);
-                    Console.WriteLine(seaMonster.WhenFound);
+                    Console.WriteLine($"weight in Tons {seaMonster.Weight}");
+                    Console.WriteLine($"Sea Monster uses fresh water {seaMonster.CanUseFreshwater}");
+                    Console.WriteLine($"{seaMonster.Name} lives in {seaMonster.HomeSea}");
+                    Console.WriteLine($"{seaMonster.Name} is feeling {seaMonster.CurrentEmotionalState}");
+                    Console.WriteLine($"First Found {seaMonster.WhenFound}");
+                    Console.WriteLine($"Sea Monster Found {seaMonster.WasFound}");
 
                     Console.Write("Enter Sea Monster's Correct Name: ");
                     seaMonster.Name = Console.ReadLine();
 
                     Console.Write("Enter Sea Monster's Correct Weight: ");
-                    double.TryParse(Console.ReadLine(), out double weight);
+                    validResponse = double.TryParse(Console.ReadLine(), out double weight);
+                    while (!validResponse)
+                    {
+                        Console.WriteLine();
+                        Console.Write("Please Enter a correct amount!");
+                        validResponse = double.TryParse(Console.ReadLine(), out weight);
+                    }
                     seaMonster.Weight = weight;
 
                     Console.Write("Can The Sea Monster Use Freshwater: ");
-                    if (Console.ReadLine().ToUpper() == "YES")
+                    while (!validResponse)
                     {
-                        seaMonster.CanUseFreshwater = true;
+                        if (Console.ReadLine().ToUpper() == "YES")
+                        {
+                            seaMonster.CanUseFreshwater = true;
+                            validResponse = true;
+                        }
+                        else if (Console.ReadLine().ToUpper() == "NO")
+                        {
+                            seaMonster.CanUseFreshwater = false;
+                            validResponse = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Console.Write("Invalid answer please choose YES or NO: ");
+                        }
                     }
-                    else
-                    {
-                        seaMonster.CanUseFreshwater = false;
-                    }
-
                     Console.Write("Enter the correct Sea they live in: ");
                     seaMonster.HomeSea = Console.ReadLine();
 
-                    Console.Write("Enter Emotional State: ");
+                    Console.Write("Enter Correct Emotional State: ");
                     Enum.TryParse(Console.ReadLine().ToUpper(), out SeaMonster.EmotionalState emotionalState);
+                    switch (emotionalState)
+                    {
+                        case SeaMonster.EmotionalState.HAPPY:
+                        case SeaMonster.EmotionalState.SAD:
+                        case SeaMonster.EmotionalState.ANGRY:
+                        case SeaMonster.EmotionalState.PISSED:
+                        case SeaMonster.EmotionalState.FURIOUS:
+                        case SeaMonster.EmotionalState.WILD:
+                            validResponse = true;
+                            break;
+                        case SeaMonster.EmotionalState.NONE:
+                            validResponse = false;
+                            break;
+                    }
+                    while (!validResponse)
+                    {
+                        Console.WriteLine();
+                        Console.Write("Please enter valid Emotion: ");
+                        Enum.TryParse(Console.ReadLine().ToUpper(), out emotionalState);
+                        switch (emotionalState)
+                        {
+                            case SeaMonster.EmotionalState.HAPPY:
+                            case SeaMonster.EmotionalState.SAD:
+                            case SeaMonster.EmotionalState.ANGRY:
+                            case SeaMonster.EmotionalState.PISSED:
+                            case SeaMonster.EmotionalState.FURIOUS:
+                            case SeaMonster.EmotionalState.WILD:
+                                validResponse = true;
+                                break;
+                            case SeaMonster.EmotionalState.NONE:
+                                validResponse = false;
+                                break;
+                        }
+                    }
                     seaMonster.CurrentEmotionalState = emotionalState;
 
-                    Console.WriteLine("Enter the  Correct Date/Time they were found (MM/dd/yyyy hh:mm): ");
-                    DateTime.TryParse(Console.ReadLine(), out DateTime dateTime);
+                    Console.WriteLine("Enter the  Correct Date/Time they were found (YYYY-MM-DD): ");
+                    validResponse = DateTime.TryParse(Console.ReadLine(), out DateTime dateTime);
+                    while (!validResponse)
+                    {
+                        Console.WriteLine();
+                        Console.Write("Please enter a valid Date & Time: ");
+                        validResponse = DateTime.TryParse(Console.ReadLine(), out dateTime);
+                    }
                     seaMonster.WhenFound = dateTime;
 
                     monsterFound = true;
@@ -216,11 +275,12 @@ namespace SimpleMonsterClass
                 if (seaMonster.Name == seaMonsterName)
                 {
                     Console.WriteLine(seaMonster.Name);
-                    Console.WriteLine(seaMonster.Weight);
-                    Console.WriteLine(seaMonster.CanUseFreshwater);
-                    Console.WriteLine(seaMonster.HomeSea);
-                    Console.WriteLine(seaMonster.CurrentEmotionalState);
-                    Console.WriteLine(seaMonster.WhenFound);
+                    Console.WriteLine($"weight in Tons {seaMonster.Weight}");
+                    Console.WriteLine($"Sea Monster uses fresh water {seaMonster.CanUseFreshwater}");
+                    Console.WriteLine($"{seaMonster.Name} lives in {seaMonster.HomeSea}");
+                    Console.WriteLine($"{seaMonster.Name} is feeling {seaMonster.CurrentEmotionalState}");
+                    Console.WriteLine($"First Found {seaMonster.WhenFound}");
+                    Console.WriteLine($"Sea Monster Found {seaMonster.WasFound}");
 
                     monsterFound = true;
                     break;
@@ -242,7 +302,7 @@ namespace SimpleMonsterClass
 
         static void DisplayAllSeaMonsters(List<SeaMonster> seaMonsters)
         {
-            DisplayHeader("List of Sea Monsters");
+            DisplayHeader("List of Sea Monsters and how they feel:");
 
             foreach (SeaMonster seamonster in seaMonsters)
             {
@@ -257,7 +317,7 @@ namespace SimpleMonsterClass
             //
             // create(instantiate) a new SeaMonster object
             //
-
+            bool validResponse = false;
             SeaMonster newSeaMonster = new SeaMonster();
             DisplayHeader("Add A Sea Monster");
             //
@@ -266,30 +326,87 @@ namespace SimpleMonsterClass
             Console.Write("Enter Name: ");
             newSeaMonster.Name = Console.ReadLine();
 
-            Console.Write("Enter Weight: ");
-            double.TryParse(Console.ReadLine(), out double weight);
+            Console.Write("Enter the monster's weight in tons: ");
+            validResponse = double.TryParse(Console.ReadLine(), out double weight);
+            while(!validResponse)
+            {
+                Console.WriteLine();
+                Console.Write("Please Enter a correct amount!");
+                validResponse = double.TryParse(Console.ReadLine(), out weight);
+            }
             newSeaMonster.Weight = weight;
 
-            Console.Write("Can Use Freshwater: ");
-            if (Console.ReadLine().ToUpper() == "YES")
+            validResponse = false;
+            while (!validResponse)
             {
-                newSeaMonster.CanUseFreshwater = true;
+                Console.Write($"Can {newSeaMonster.Name} Use Freshwater: ");
+                if (Console.ReadLine().ToUpper() == "YES")
+                {
+                    newSeaMonster.CanUseFreshwater = true;
+                    validResponse = true;
+                }
+                else if (Console.ReadLine().ToUpper() == "NO")
+                {
+                    newSeaMonster.CanUseFreshwater = false;
+                    validResponse = true;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.Write("Invalid answer please choose YES or NO: ");
+                }
             }
-            else
-            {
-                newSeaMonster.CanUseFreshwater = false;
-            }
-
-            Console.Write("Enter Which Sea They Live: ");
+            Console.Write($"Which body does {newSeaMonster.Name} reside: ");
             newSeaMonster.HomeSea = Console.ReadLine();
 
-            Console.Write("Enter Emotional State: ");
+            Console.Write("Enter Emotional State(Happy, Sad, Angry, Pissed, Furious, Wild): ");
             Enum.TryParse(Console.ReadLine().ToUpper(), out SeaMonster.EmotionalState emotionalState);
+            switch (emotionalState)
+            {
+                case SeaMonster.EmotionalState.HAPPY:
+                case SeaMonster.EmotionalState.SAD:
+                case SeaMonster.EmotionalState.ANGRY:
+                case SeaMonster.EmotionalState.PISSED:
+                case SeaMonster.EmotionalState.FURIOUS:
+                case SeaMonster.EmotionalState.WILD:
+                    validResponse = true;
+                    break;
+                case SeaMonster.EmotionalState.NONE:
+                    validResponse = false;
+                    break;
+            }
+            while (!validResponse)
+            {
+                Console.WriteLine();
+                Console.Write("Please enter valid Emotion: ");
+                Enum.TryParse(Console.ReadLine().ToUpper(), out emotionalState);
+                switch (emotionalState)
+                {
+                    case SeaMonster.EmotionalState.HAPPY:
+                    case SeaMonster.EmotionalState.SAD:
+                    case SeaMonster.EmotionalState.ANGRY:
+                    case SeaMonster.EmotionalState.PISSED:
+                    case SeaMonster.EmotionalState.FURIOUS:
+                    case SeaMonster.EmotionalState.WILD:
+                        validResponse = true;
+                        break;
+                    case SeaMonster.EmotionalState.NONE:
+                        validResponse = false;
+                        break;
+                }
+            }
             newSeaMonster.CurrentEmotionalState = emotionalState;
 
-            Console.WriteLine("Enter the Date/Time they were found (MM/dd/yyyy hh:mm): ");
-            DateTime.TryParse(Console.ReadLine(), out DateTime dateTime);
+            Console.WriteLine("Enter the  Correct Date/Time they were found (YYYY,MM,DD,hh,mm,ss): ");
+            validResponse = DateTime.TryParse(Console.ReadLine(), out DateTime dateTime);
+            while (!validResponse)
+            {
+                Console.WriteLine();
+                Console.Write("Please enter a valid Date & Time: ");
+                validResponse = DateTime.TryParse(Console.ReadLine(), out dateTime);
+            }
             newSeaMonster.WhenFound = dateTime;
+            newSeaMonster.SeaMonsterIsFound();
 
             //
             //Add Sea Monster to list
@@ -352,6 +469,7 @@ namespace SimpleMonsterClass
                         break;
 
                     default:
+                        Console.WriteLine("Invalid choice please choose again.");
                         break;
                 }
             }
